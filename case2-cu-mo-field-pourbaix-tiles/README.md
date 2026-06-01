@@ -55,12 +55,12 @@ The four adsorbed structures on Cu(111) (side and top views):
 
 <table>
 <tr>
-  <td align="center"><img src="structures/H3Mo.png" width="200"><br><b>H₃Mo</b></td>
-  <td align="center"><img src="structures/H3MoOH.png" width="200"><br><b>H₃MoOH</b></td>
+  <td align="center"><img src="img/H3Mo.png" width="200"><br><b>H₃Mo</b></td>
+  <td align="center"><img src="img/H3MoOH.png" width="200"><br><b>H₃MoOH</b></td>
 </tr>
 <tr>
-  <td align="center"><img src="structures/H2MoOH2.png" width="200"><br><b>H₂MoOH₂</b></td>
-  <td align="center"><img src="structures/MoOOH3.png" width="200"><br><b>MoO(OH)₃</b></td>
+  <td align="center"><img src="img/H2MoOH2.png" width="200"><br><b>H₂MoOH₂</b></td>
+  <td align="center"><img src="img/MoOOH3.png" width="200"><br><b>MoO(OH)₃</b></td>
 </tr>
 </table>
 
@@ -127,7 +127,7 @@ cu-mo-field-pourbaix-tiles/
 │   ├── step1_fit_field_response.py     # field scan -> mu, alpha per species
 │   ├── step2_rank_stability_grid.py    # mu/alpha + formation terms -> winner per cell
 │   └── step3_plot_pourbaix_diagram.py  # stability grid -> field-corrected Pourbaix diagram
-├── structures/                         # DFT structure images of the four adsorbates
+├── img/                                # DFT structure images of the four adsorbates
 ├── results/
 │   └── pourbaix_diagram_cu111.png      # (stability_grid_*.csv is regenerated, not committed)
 ├── requirements.txt
