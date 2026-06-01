@@ -51,16 +51,16 @@ toward higher potential.
 
 ### Surface species
 
-The four adsorbed structures on Cu(111) (side and top views):
+The bare Mo reference and the four adsorbed MoOₘHₙ structures on Cu(111) (each panel
+shows the side view above the top view):
 
 <table>
 <tr>
-  <td align="center"><img src="img/H3Mo.png" width="200"><br><b>H₃Mo</b></td>
-  <td align="center"><img src="img/H3MoOH.png" width="200"><br><b>H₃MoOH</b></td>
-</tr>
-<tr>
-  <td align="center"><img src="img/H2MoOH2.png" width="200"><br><b>H₂MoOH₂</b></td>
-  <td align="center"><img src="img/MoOOH3.png" width="200"><br><b>MoO(OH)₃</b></td>
+  <td align="center"><img src="img/Figure1a.png" width="150"><br><b>Mo</b> (reference)</td>
+  <td align="center"><img src="img/Figure1b.png" width="150"><br><b>H₃Mo</b></td>
+  <td align="center"><img src="img/Figure1c.png" width="150"><br><b>H₃MoOH</b></td>
+  <td align="center"><img src="img/Figure1d.png" width="150"><br><b>H₂MoOH₂</b></td>
+  <td align="center"><img src="img/Figure1e.png" width="150"><br><b>MoO(OH)₃</b></td>
 </tr>
 </table>
 
@@ -127,7 +127,7 @@ cu-mo-field-pourbaix-tiles/
 │   ├── step1_fit_field_response.py     # field scan -> mu, alpha per species
 │   ├── step2_rank_stability_grid.py    # mu/alpha + formation terms -> winner per cell
 │   └── step3_plot_pourbaix_diagram.py  # stability grid -> field-corrected Pourbaix diagram
-├── img/                                # DFT structure images of the four adsorbates
+├── img/                                # structure images: Mo reference + four adsorbates
 ├── results/
 │   └── pourbaix_diagram_cu111.png      # (stability_grid_*.csv is regenerated, not committed)
 ├── requirements.txt
