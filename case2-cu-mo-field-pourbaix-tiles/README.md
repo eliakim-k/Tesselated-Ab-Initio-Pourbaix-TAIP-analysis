@@ -6,7 +6,7 @@ sampling** ("tiles") rather than by analytically solving for the equilibria
 between species.
 
 This is the field-aware sibling of the
-[iridium-pourbaix-tiles](../iridium-pourbaix-tiles) workflow: the same
+[iridium-pourbaix-tiles](../case1-iridium-pourbaix-tiles) workflow: the same
 tile-and-rank idea, but each species now also responds to the local interfacial
 electric field through a fitted dipole and polarizability.
 
