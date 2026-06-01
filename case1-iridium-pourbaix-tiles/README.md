@@ -80,7 +80,7 @@ rises toward the ~1.53 V vs. SHE OER onset.
 
 Compare the reconstruction above with the published potential–pH diagram of
 Bhattacharyya et al. (their numbered regions 1–8), available from the publisher at
-[10.1021/acs.jpcc.0c10092](https://doi.org/10.1021/acs.jpcc.0c10092](https://pubs.acs.org/cms/10.1021/acs.jpcc.0c10092/asset/images/large/jp0c10092_0004.jpeg). Over most of the
+[10.1021/acs.jpcc.0c10092]([https://doi.org/10.1021/acs.jpcc.0c10092](https://pubs.acs.org/cms/10.1021/acs.jpcc.0c10092/asset/images/large/jp0c10092_0004.jpeg](https://pubs.acs.org/cms/10.1021/acs.jpcc.0c10092/asset/images/large/jp0c10092_0004.jpeg)). Over most of the
 plane the tile reconstruction recovers the published topology:
 
 - **Regions 1–5 and 8 are reproduced in the same positions** (and, by coincidence
