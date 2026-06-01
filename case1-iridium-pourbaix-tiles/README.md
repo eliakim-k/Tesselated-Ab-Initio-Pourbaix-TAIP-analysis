@@ -1,4 +1,4 @@
-# Iridium Pourbaix Tiles
+# Iridium oxide cluster - TAIP map
 
 Build a **potential–pH (Pourbaix) diagram** for a catalyst directly from
 first-principles energies, by **brute-force grid sampling** ("tiles") rather than
@@ -12,7 +12,7 @@ the iridium-oxide oxygen-evolution catalyst of Bhattacharyya, Poidevin & Auer
   <img src="results/pourbaix_diagram_bhattacharyya.png" width="560" alt="Pourbaix diagram of IrOx clusters (Bhattacharyya et al. data)">
 </p>
 
-## Why this approach (the motivation)
+## Why this approach?
 
 The textbook way to draw a Pourbaix diagram is to work out, *by hand*, every
 equilibrium between every pair of species: the `pKa` of each
