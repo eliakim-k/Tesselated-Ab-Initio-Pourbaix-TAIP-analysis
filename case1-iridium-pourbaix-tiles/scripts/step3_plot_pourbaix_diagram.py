@@ -6,6 +6,9 @@ Reads the stability grid from step 2 and colours every cell by its most stable
 species. Cells sharing a winner form contiguous coloured regions: the stability
 domains of the Pourbaix (potential-pH) diagram.
 
+The legend uses the short species codes to keep the figure uncluttered; the
+code -> cluster-formula key is given in the README.
+
 Input : results/stability_grid_<dataset>.csv
 Output: results/pourbaix_diagram_<dataset>.png
 """

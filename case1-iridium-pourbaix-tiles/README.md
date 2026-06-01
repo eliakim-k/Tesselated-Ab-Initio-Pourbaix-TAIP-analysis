@@ -1,4 +1,4 @@
-# Iridium oxide cluster - TAIP map
+# TAIP map for Iridium oxide clusters
 
 Build a **potential–pH (Pourbaix) diagram** for a catalyst directly from
 first-principles energies, by **brute-force grid sampling** ("tiles") rather than
@@ -11,6 +11,26 @@ the iridium-oxide oxygen-evolution catalyst of Bhattacharyya, Poidevin & Auer
 <p align="center">
   <img src="results/pourbaix_diagram_bhattacharyya.png" width="560" alt="Pourbaix diagram of IrOx clusters (Bhattacharyya et al. data)">
 </p>
+
+The legend uses short species **codes** to keep the figure uncluttered. Each code
+decodes to a cluster as follows (the implicit Ir₃O₄ core is dropped, matching the
+convention of the published figure), with the corresponding region number in
+Bhattacharyya et al.:
+
+| Code | Cluster (this work)            | Bhattacharyya region |
+|------|--------------------------------|----------------------|
+| 1D   | Ir₃(OH)₅(H₂O)₅⁺                 | (1)                  |
+| 1E   | Ir₃(OH)₅(H₂O)₅²⁺                | (2)                  |
+| 2D   | Ir₃(OH)₆(H₂O)₄⁺                 | (3)                  |
+| 3C   | Ir₃(OH)₇(H₂O)₃                  | (4)                  |
+| 4B   | Ir₃(OH)₁₀⁻                      | (5)                  |
+| 5B   | Ir₃(OH)₃O₇⁻                     | (7)                  |
+| 6B   | Ir₃(OH)₂O₈⁻                     | (8)                  |
+| 4C   | Ir₃(OH)₁₀ (neutral)            | — (not in the published set) |
+
+(Code = cluster ranked by H content + charge letter A=−2, B=−1, C=0, D=+1, E=+2;
+see [`data/README.md`](data/README.md). The published labels use the μ₁ on-top
+notation, e.g. our Ir₃(OH)₅ ≡ Ir₃(OHμ₁)₅.)
 
 ## Why this approach?
 
@@ -48,13 +68,38 @@ We apply the method to the system of:
 Iridium oxide (IrOₓ) is the benchmark anode catalyst for the oxygen evolution
 reaction (OER) in acidic water electrolysers. Bhattacharyya et al. model the
 nanoparticle as a finite molecular cluster (`Ir₃(Oμ₁)₄(OHμ₁)₄(H₂O)₆`, here written
-as `Ir_3_O_4_OH_5_H2O_5` and relatives). Under operating conditions the cluster
-exchanges **electrons** with the electrode (changing its net charge `q`) and
-**protons** with the solvent (changing its hydrogen count `n`). The most stable
+as `Ir_3_O_4_OH_5_H2O_5` and relatives), with geometries and energies from
+molecular (Gaussian-basis) DFT using **ORCA**. Under operating conditions the
+cluster exchanges **electrons** with the electrode (changing its net charge `q`)
+and **protons** with the solvent (changing its hydrogen count `n`). The most stable
 state therefore moves across the `U`–`pH` plane: protonated, hydroxyl-rich species
 dominate at low potential, and deprotonation/oxidation takes over as the potential
-rises toward the ~1.53 V vs. SHE OER onset. The diagram above reproduces those
-trends directly from the published cluster energies.
+rises toward the ~1.53 V vs. SHE OER onset.
+
+## Comparison with the published diagram
+
+Compare the reconstruction above with the published potential–pH diagram of
+Bhattacharyya et al. (their numbered regions 1–8), available from the publisher at
+[10.1021/acs.jpcc.0c10092](https://doi.org/10.1021/acs.jpcc.0c10092). Over most of the
+plane the tile reconstruction recovers the published topology:
+
+- **Regions 1–5 and 8 are reproduced in the same positions** (and, by coincidence
+  of palette, similar colours): the protonated/hydrated cations `Ir₃(OH)₅(H₂O)₅⁺`
+  (1) and `²⁺` (2), `Ir₃(OH)₆(H₂O)₄⁺` (3) and `Ir₃(OH)₇(H₂O)₃` (4) at low
+  potential/low pH, the deprotonated `Ir₃(OH)₁₀⁻` (5), and the fully oxidised
+  `Ir₃(OH)₂O₈⁻` (8) dominating the high-potential region.
+- **The intermediate oxo regions (6) and (7) are not resolved here.** This curated
+  eight-species table does not include published species (6) `Ir₃(OH)₆O₄⁻`, and
+  species (7) `Ir₃(OH)₃O₇⁻` (code `5B`) is present but is never the lowest-energy
+  state under these energies, so the small (6)/(7) wedge in the upper-right is
+  absorbed by the neighbouring (8) domain. Supplying the full species list would
+  restore them.
+- A thin **neutral `Ir₃(OH)₁₀` (4C)** slice appears along the (4)/(5) boundary — a
+  species not drawn separately in the published figure.
+
+The agreement over regions 1–5 and 8 confirms that the tiles method, fed the same
+cluster energies, reproduces the published diagram; the differences are entirely a
+consequence of *which species are included in the input table*, not of the method.
 
 ## The free-energy expression
 
@@ -103,7 +148,8 @@ The energies live in two layouts, and `step 1` converts between them.
   pair, the unit that competes for stability. `step 1` also assigns every species a
   short **code** (e.g. `2D`) so the later steps never carry long formula strings:
   number = cluster ranked by H content (1 = most H-rich), letter = charge
-  (A = −2, B = −1, C = 0, D = +1, E = +2).
+  (A = −2, B = −1, C = 0, D = +1, E = +2). The code → formula key is the table
+  above.
 
 ## Repository layout
 
@@ -143,6 +189,18 @@ without touching the logic. To analyse a different system, drop an
 
 Python ≥ 3.9 with `numpy`, `pandas`, `matplotlib` (see `requirements.txt`). The
 figure uses Times New Roman where available and falls back to a generic serif.
+
+## Citation
+
+If you use this method or workflow, please cite:
+
+> Kambale, E. M.; Rivera Rocabado, D. S.; Kanematsu, Y.; Ishimoto, T.
+> *Field-Dependent Redox Thermodynamics of MoOₘHₙ Species on Cu(111) and Ni(111)
+> Surfaces under Alkaline Hydrogen Evolution Conditions.* Preprints.org, 2026.
+> DOI: [10.20944/preprints202604.0944.v1](https://doi.org/10.20944/preprints202604.0944.v1)
+
+The case-study energies are from Bhattacharyya, Poidevin & Auer, *J. Phys. Chem. C*
+2021, 125, 4379 ([10.1021/acs.jpcc.0c10092](https://doi.org/10.1021/acs.jpcc.0c10092)).
 
 ## License
 

@@ -1,4 +1,4 @@
-# Cu–Mo Field Pourbaix Tiles
+# TAIP map of HER-relevant Mo complexes Adsorbed on Cu(111)
 
 Build a **field-corrected surface Pourbaix (potential–pH) diagram** for a
 supported catalyst directly from first-principles energies, by **brute-force grid
@@ -14,7 +14,7 @@ electric field through a fitted dipole and polarizability.
   <img src="results/pourbaix_diagram_cu111.png" width="560" alt="Field-corrected Pourbaix diagram of MoOmHn on Cu(111)">
 </p>
 
-## Why this approach (the motivation)
+## Why this approach?
 
 The textbook way to draw a Pourbaix diagram is to work out, *by hand*, every
 equilibrium between every pair of species: the `pKa` of each
@@ -153,6 +153,15 @@ without touching the logic.
 
 Python ≥ 3.9 with `numpy`, `pandas`, `scipy`, `matplotlib` (see `requirements.txt`).
 The figure uses Times New Roman where available and falls back to a generic serif.
+
+## Citation
+
+If you use this method or workflow, please cite:
+
+> Kambale, E. M.; Rivera Rocabado, D. S.; Kanematsu, Y.; Ishimoto, T.
+> *Field-Dependent Redox Thermodynamics of MoOₘHₙ Species on Cu(111) and Ni(111)
+> Surfaces under Alkaline Hydrogen Evolution Conditions.* Preprints.org, 2026.
+> DOI: [10.20944/preprints202604.0944.v1](https://doi.org/10.20944/preprints202604.0944.v1)
 
 ## License
 
