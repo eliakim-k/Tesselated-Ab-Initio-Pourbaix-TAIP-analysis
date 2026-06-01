@@ -2,8 +2,8 @@
 """
 Step 3 - Plot the field-corrected Pourbaix diagram.
 
-Reads the stability grid from step 2 and colours every cell by its most stable
-species. Cells sharing a winner form contiguous coloured regions: the stability
+Reads the stability grid from step 2 and colors every cell by its most stable
+species. Cells sharing a winner form contiguous colored regions: the stability
 domains of the (field-corrected) surface Pourbaix diagram. Potential vs. RHE.
 
 Input : results/stability_grid_cu111.csv
@@ -40,7 +40,7 @@ X_TICK_STEP, Y_TICK_STEP = 2.0, 0.2
 TICK_LENGTH, TICK_WIDTH, TICK_DIRECTION = 7, 1.5, "in"
 FIGURE_WIDTH, FIGURE_HEIGHT, FIGURE_DPI = 12, 12, 600
 
-# Fixed colour per species (stable legend regardless of which domains appear).
+# Fixed color per species (stable legend regardless of which domains appear).
 SPECIES_COLORS = {
     "H3Mo":    "#333333",
     "H3MoOH":  "#0096FF",

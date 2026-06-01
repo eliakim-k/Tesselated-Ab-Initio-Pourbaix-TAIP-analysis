@@ -2,8 +2,8 @@
 """
 Step 3 - Plot the Pourbaix diagram.
 
-Reads the stability grid from step 2 and colours every cell by its most stable
-species. Cells sharing a winner form contiguous coloured regions: the stability
+Reads the stability grid from step 2 and colors every cell by its most stable
+species. Cells sharing a winner form contiguous colored regions: the stability
 domains of the Pourbaix (potential-pH) diagram.
 
 The legend uses the short species codes to keep the figure uncluttered; the

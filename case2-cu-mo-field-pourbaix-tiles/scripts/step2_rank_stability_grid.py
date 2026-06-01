@@ -56,7 +56,7 @@ CELL_PH = 0.01
 CELL_U = 0.01
 
 
-def cell_centres(lo, hi, step):
+def cell_centers(lo, hi, step):
     edges = np.arange(lo, hi + step, step)
     return edges, (edges[:-1] + edges[1:]) / 2.0
 
@@ -82,8 +82,8 @@ def main() -> None:
     m = terms.loc["m", species].to_numpy(float)[:, None, None]
     n = terms.loc["n", species].to_numpy(float)[:, None, None]
 
-    ph_edges, ph_c = cell_centres(PH_MIN, PH_MAX, CELL_PH)
-    u_edges, u_c = cell_centres(U_MIN, U_MAX, CELL_U)
+    ph_edges, ph_c = cell_centers(PH_MIN, PH_MAX, CELL_PH)
+    u_edges, u_c = cell_centers(U_MIN, U_MAX, CELL_U)
     PH, U = np.meshgrid(ph_c, u_c, indexing="xy")  # (nU, nPH)
 
     E_A = interfacial_field(U[None], PH[None])      # (1, nU, nPH)

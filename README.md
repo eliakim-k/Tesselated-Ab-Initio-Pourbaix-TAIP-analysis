@@ -1,30 +1,45 @@
 # Tessellated Ab-Initio Pourbaix (TAIP) Analysis
 
-Build **surface and cluster Pourbaix (potential–pH) diagrams from first-principles
-energies** by tessellating the potential–pH plane into a fine grid of tiles and,
-in each tile, simply keeping the species with the lowest free energy.
+Construct **surface and cluster Pourbaix (potential–pH) diagrams from
+first-principles energies** by tiling the potential–pH plane into a fine grid and,
+in each tile, keeping the species with the lowest free energy.
 
-The point of the approach is what it *avoids*: there is no analytical construction
-of the equilibria between species — no `pKa` of each protonation step, no
-equilibrium potential of each redox step, no Nernst-line intersections to solve.
-You only need a single closed-form free energy per species as a function of `U`
-and `pH`; the phase boundaries then **emerge on their own** as the contours where
-the winning species changes.
+## The problem
+
+A Pourbaix diagram shows which species is most stable as a function of electrode
+potential `U` and `pH`. Built analytically, it requires — for every pair of
+candidate species — writing the acid–base (`pKa`) and redox (Nernst) equilibrium
+conditions and intersecting the resulting lines to bound each stability field. The
+number of pairwise relations grows with the number of charge and protonation
+states considered.
+
+## The approach
+
+Each candidate species has a single closed-form free energy as a function of `U`
+and `pH` (the exact expression for each case study is given in that case's README).
+The diagram then follows in three steps:
+
+1. lay a fine grid over the potential–pH plane;
+2. evaluate that free energy for **every** species at the center of each tile;
+3. assign each tile to the species with the lowest free energy and color it accordingly.
+
+A phase boundary is the locus where the lowest-energy species changes; it is read
+off the grid rather than solved for. Adding a candidate species, charge state, or
+protonation level means adding a row to the input table, not re-deriving the
+diagram.
 
 ## The two case studies
 
-| | Case 1 — [`case1-iridium-pourbaix-tiles`](case1-iridium-pourbaix-tiles) | Case 2 — [`case2-cu-mo-field-pourbaix-tiles`](case2-cu-mo-field-pourbaix-tiles) |
+Each case is a self-contained, runnable repository (its own data, three staged
+scripts, README).
+
+| | [`case1-iridium-pourbaix-tiles`](case1-iridium-pourbaix-tiles) | [`case2-cu-mo-field-pourbaix-tiles`](case2-cu-mo-field-pourbaix-tiles) |
 |---|---|---|
 | System | IrOₓ nanoparticle clusters | MoOₘHₙ on Cu(111) |
 | Competing states | discrete charge + protonation states | hydride/oxyhydride adsorbates |
 | Potential reference | SHE | RHE |
-| Extra physics | — | explicit interfacial-field correction (dipole μ, polarizability α, Helmholtz double layer) |
+| Extra physics | — | interfacial-field correction (dipole μ, polarizability α, Helmholtz double layer) |
 | Case study | Bhattacharyya, Poidevin & Auer, *J. Phys. Chem. C* 2021 | Kambale, Rivera Rocabado, Kanematsu & Ishimoto, *Preprints.org* 2026 |
-
-Each case is a self-contained, runnable repository (its own data, three staged
-scripts, README). Case 2 is the field-aware generalisation of Case 1: same
-tile-and-rank engine, with each species additionally responding to the local
-electric field.
 
 <p align="center">
   <img src="case1-iridium-pourbaix-tiles/results/pourbaix_diagram_bhattacharyya.png" width="380" alt="Case 1 diagram">
@@ -32,35 +47,24 @@ electric field.
   <img src="case2-cu-mo-field-pourbaix-tiles/results/pourbaix_diagram_cu111.png" width="380" alt="Case 2 diagram">
 </p>
 
-## How it works, in three steps
+Case 2 is the field-aware counterpart of Case 1: the same tile-and-rank engine,
+with each species additionally responding to the local electric field.
 
-Both cases share the same pipeline:
+## Grid resolution and cost
 
-1. **prepare** the species table (energies, charge/H counts, field response);
-2. **rank** every species at the centre of every grid tile and record the winner;
-3. **plot** the tiles coloured by their winning species.
-
-## Grid resolution, granularity, and cost
-
-The diagram is a **discretization**, and that has a visible consequence: a phase
-boundary is only ever resolved to the width of one tile, so at coarse resolution
-boundaries look like a **staircase**. Refining the grid smooths them — at a price.
-
-The cost is essentially
+The diagram is a discretization, so a phase boundary is resolved only to the width
+of one tile; at coarse resolution boundaries appear as a staircase, and refining
+the grid sharpens them. The ranking cost is
 
 ```
 work  ∝  (number of tiles) × (number of species)
 number of tiles  =  (ΔU / δU) × (ΔpH / δpH)
 ```
 
-so **halving the tile size in both axes quadruples the number of tiles** (and the
-runtime). The boundaries get ~2× sharper; the compute grows ~4×. There is no
-accuracy gain in the thermodynamics from a finer grid — only a smoother-looking
-boundary — so the resolution is a visual/cosmetic choice, not a physical one.
-
-In practice this stays cheap because the ranking is evaluated as a single
-vectorized operation (next section). Representative single-core timings for the
-ranking step:
+so halving the tile size in both axes multiplies the number of tiles (and the
+runtime) by four. The thermodynamics in each tile is unchanged by the grid
+spacing; only the boundary resolution changes. Representative single-core timings
+for the ranking step:
 
 | grid (pH × U) | tiles | species | time (1 core) |
 |---------------|-------|---------|---------------|
@@ -69,27 +73,16 @@ ranking step:
 | 1400 × 1400   | 1,960,000 | 8  | ~0.17 s |
 | 2800 × 2800   | 7,840,000 | 8  | ~0.85 s |
 
-So a user who wants a finer diagram simply sets a smaller `δU`/`δpH` (more, smaller
-tiles) and pays a little more time — but even multi-million-tile grids finish in
-well under a second on a single core.
+A finer diagram is obtained by setting a smaller `δU`/`δpH` (more, smaller tiles).
 
-## Performance: vectorization (and why caching/parallelism aren't needed)
+## Performance: vectorization
 
-Ranking is *embarrassingly parallel* — every tile is independent. Rather than loop
-over tiles in Python, the scripts evaluate the free energy as one **NumPy broadcast
-over a `(species, U, pH)` array** and take an `argmin` along the species axis. The
-entire grid is computed in a handful of array operations, which is why the timings
-above are sub-second.
-
-This is a deliberate simplification of an earlier implementation that used
-per-point memoization (`functools.lru_cache`) and a thread pool
-(`concurrent.futures`). With full vectorization those add complexity without
-benefit at the grid sizes used here: NumPy already runs the arithmetic in
-optimized C over the whole array. The only situation that needs more is a grid so
-fine (or a species set so large) that the `(species, U, pH)` array exceeds memory
-— then evaluate it in **chunks** (split the grid into blocks and rank each block),
-still vectorized per block, optionally across processes. For the diagrams here
-that is never required.
+The ranking is independent across tiles. Rather than loop over tiles in Python,
+the scripts evaluate the free energy as one NumPy broadcast over a
+`(species, U, pH)` array and take an `argmin` along the species axis, which is why
+the timings above are sub-second. If the `(species, U, pH)` array exceeds memory,
+the grid can be evaluated in chunks (split into blocks and rank each block), still
+vectorized per block.
 
 ## Repository layout
 
@@ -112,7 +105,7 @@ If you use the TAIP method or this code, **please cite the method paper**:
 > Surfaces under Alkaline Hydrogen Evolution Conditions.* **Preprints.org** 2026.
 > [doi:10.20944/preprints202604.0944.v1](https://doi.org/10.20944/preprints202604.0944.v1)
 
-The Case 1 case-study cluster geometries used to compute the energies are from:
+The Case 1 case-study energies are from:
 
 > Bhattacharyya, K.; Poidevin, C.; Auer, A. A. *Structure and Reactivity of IrOₓ
 > Nanoparticles for the Oxygen Evolution Reaction in Electrocatalysis: An Electronic

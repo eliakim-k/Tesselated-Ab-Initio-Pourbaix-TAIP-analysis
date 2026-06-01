@@ -59,7 +59,7 @@ CELL_PH = 0.04
 CELL_U = 0.004
 
 
-def cell_centres(lo, hi, step):
+def cell_centers(lo, hi, step):
     edges = np.arange(lo, hi + step, step)
     return edges, (edges[:-1] + edges[1:]) / 2.0
 
@@ -82,8 +82,8 @@ def rank_dataset(long_csv: Path, grid_csv: Path, reference_id: str) -> None:
     q = df["charge"].to_numpy()[:, None, None]
     n = df["n_H"].to_numpy()[:, None, None]
 
-    ph_edges, ph_c = cell_centres(PH_MIN, PH_MAX, CELL_PH)
-    u_edges, u_c = cell_centres(U_MIN, U_MAX, CELL_U)
+    ph_edges, ph_c = cell_centers(PH_MIN, PH_MAX, CELL_PH)
+    u_edges, u_c = cell_centers(U_MIN, U_MAX, CELL_U)
     PH, U = np.meshgrid(ph_c, u_c, indexing="xy")  # (nU, nPH)
 
     dn = n_ref - n
