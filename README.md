@@ -112,7 +112,7 @@ If you use the TAIP method or this code, **please cite the method paper**:
 > Surfaces under Alkaline Hydrogen Evolution Conditions.* **Preprints.org** 2026.
 > [doi:10.20944/preprints202604.0944.v1](https://doi.org/10.20944/preprints202604.0944.v1)
 
-The Case 1 case-study energies are from:
+The Case 1 case-study cluster geometries used to compute the energies are from:
 
 > Bhattacharyya, K.; Poidevin, C.; Auer, A. A. *Structure and Reactivity of IrOₓ
 > Nanoparticles for the Oxygen Evolution Reaction in Electrocatalysis: An Electronic
