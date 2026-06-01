@@ -60,8 +60,9 @@ We apply the workflow to the iridium-oxide catalyst of:
 > 4379–4390. DOI: [10.1021/acs.jpcc.0c10092](https://doi.org/10.1021/acs.jpcc.0c10092)
 
 The nanoparticle is modeled as a finite molecular cluster (`Ir₃(Oμ₁)₄(OHμ₁)₄(H₂O)₆`,
-written here as `Ir_3_O_4_OH_5_H2O_5` and relatives); geometries and energies are
-from molecular (Gaussian-basis) DFT using **ORCA**. Each species carries a net
+written here as `Ir_3_O_4_OH_5_H2O_5` and relatives). The cluster geometries are
+taken from Bhattacharyya et al.; the energies used here were computed in this work
+with molecular (Gaussian-basis) DFT (**ORCA**, PBE-D3/def2-TZVP). Each species carries a net
 charge `q` and a hydrogen count `n`; the input table lists the charge/protonation
 states considered.
 
@@ -104,8 +105,6 @@ of the grid above onto those regions:
 - Published region (6), `Ir₃(OH)₆O₄⁻`, is not represented because that species is
   not in the input table.
 - A thin neutral `Ir₃(OH)₁₀` (code `4C`) appears along the (4)/(5) boundary.
-
-These statements are read directly from the input table and the computed map.
 
 ## Data: pivot vs. long format
 
@@ -162,8 +161,9 @@ If you use this method or workflow, please cite:
 > Surfaces under Alkaline Hydrogen Evolution Conditions.* Preprints.org, 2026.
 > DOI: [10.20944/preprints202604.0944.v1](https://doi.org/10.20944/preprints202604.0944.v1)
 
-The case-study energies are from Bhattacharyya, Poidevin & Auer, *J. Phys. Chem. C*
-2021, 125, 4379 ([10.1021/acs.jpcc.0c10092](https://doi.org/10.1021/acs.jpcc.0c10092)).
+The cluster geometries are from Bhattacharyya, Poidevin & Auer, *J. Phys. Chem. C*
+2021, 125, 4379 ([10.1021/acs.jpcc.0c10092](https://doi.org/10.1021/acs.jpcc.0c10092));
+the energies used here were computed in this work.
 
 ## License
 

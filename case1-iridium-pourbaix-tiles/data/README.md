@@ -1,11 +1,12 @@
 # Data
 
-DFT energies for the iridium-oxide cluster models of Bhattacharyya, Poidevin &
-Auer (*J. Phys. Chem. C* 2021, 125, 4379–4390,
+DFT energies computed in this work for the iridium-oxide cluster geometries of
+Bhattacharyya, Poidevin & Auer (*J. Phys. Chem. C* 2021, 125, 4379–4390,
 [10.1021/acs.jpcc.0c10092](https://doi.org/10.1021/acs.jpcc.0c10092)).
 
-Level of theory: **PBE-D3 / def2-TZVP**, electronic energies (zero-point and
-entropic corrections neglected, following the paper). Energies are in eV.
+Geometries are from the paper; the energies were recomputed here at
+**PBE-D3 / def2-TZVP** (electronic energies; zero-point and entropic corrections
+neglected). Energies are in eV.
 
 The data lives in two layouts; `scripts/step1_pivot_to_long_format.py` converts
 the pivot table into the long format consumed by the analysis.

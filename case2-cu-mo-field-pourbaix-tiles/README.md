@@ -28,7 +28,8 @@ Two ingredients set each species' free energy at a point `(U, pH)`.
 G(U) = G_system - G_Mo - m*G_H2O + (m - n/2)*G_H2 + (n - 2m)*q*U
 ```
 
-with `m` = water molecules exchanged, `n` = H atoms, `q` = 1 electron per proton.
+with `m` = number of oxygen atoms in the complex, `n` = number of hydrogen atoms in
+the complex, `q` = atomic unit of charge (= 1).
 Potential `U` is referenced to RHE.
 
 **2. The local interfacial field.** A Helmholtz double-layer model maps `U` and
