@@ -1,0 +1,13 @@
+# Regenerated intermediate (produced by step 2)
+results/stability_grid_*.csv
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+Thumbs.db
