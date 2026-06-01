@@ -103,16 +103,21 @@ TAIP/
 (If your case folders are named without the `case1-`/`case2-` prefix, adjust the
 links above accordingly.)
 
-## Citations
+## Citation
 
-- Bhattacharyya, K.; Poidevin, C.; Auer, A. A. *Structure and Reactivity of IrOₓ
-  Nanoparticles for the Oxygen Evolution Reaction in Electrocatalysis: An Electronic
-  Structure Theory Study.* **J. Phys. Chem. C** 2021, *125*, 4379–4390.
-  [doi:10.1021/acs.jpcc.0c10092](https://doi.org/10.1021/acs.jpcc.0c10092)
-- Kambale, E. M.; Rivera Rocabado, D. S.; Kanematsu, Y.; Ishimoto, T.
-  *Field-Dependent Redox Thermodynamics of MoOₘHₙ Species on Cu(111) and Ni(111)
-  Surfaces under Alkaline Hydrogen Evolution Conditions.* **Preprints.org** 2026.
-  [doi:10.20944/preprints202604.0944.v1](https://doi.org/10.20944/preprints202604.0944.v1)
+If you use the TAIP method or this code, **please cite the method paper**:
+
+> Kambale, E. M.; Rivera Rocabado, D. S.; Kanematsu, Y.; Ishimoto, T.
+> *Field-Dependent Redox Thermodynamics of MoOₘHₙ Species on Cu(111) and Ni(111)
+> Surfaces under Alkaline Hydrogen Evolution Conditions.* **Preprints.org** 2026.
+> [doi:10.20944/preprints202604.0944.v1](https://doi.org/10.20944/preprints202604.0944.v1)
+
+The Case 1 case-study energies are from:
+
+> Bhattacharyya, K.; Poidevin, C.; Auer, A. A. *Structure and Reactivity of IrOₓ
+> Nanoparticles for the Oxygen Evolution Reaction in Electrocatalysis: An Electronic
+> Structure Theory Study.* **J. Phys. Chem. C** 2021, *125*, 4379–4390.
+> [doi:10.1021/acs.jpcc.0c10092](https://doi.org/10.1021/acs.jpcc.0c10092)
 
 ## License
 
