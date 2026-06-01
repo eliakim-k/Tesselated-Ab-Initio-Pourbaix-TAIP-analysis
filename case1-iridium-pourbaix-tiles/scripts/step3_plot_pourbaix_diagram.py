@@ -1,16 +1,13 @@
 #!/usr/bin/env python3
 """
-Step 3 - Plot the Pourbaix diagram(s).
+Step 3 - Plot the Pourbaix diagram.
 
-Reads each stability grid from step 2 and colours every cell by its most stable
+Reads the stability grid from step 2 and colours every cell by its most stable
 species. Cells sharing a winner form contiguous coloured regions: the stability
 domains of the Pourbaix (potential-pH) diagram.
 
-Produces, for the configured datasets:
-  - one diagram per dataset:        results/pourbaix_diagram_<dataset>.png
-  - one side-by-side comparison:    results/pourbaix_diagram_comparison.png
-
 Input : results/stability_grid_<dataset>.csv
+Output: results/pourbaix_diagram_<dataset>.png
 """
 
 import logging
@@ -26,12 +23,7 @@ from matplotlib.colors import ListedColormap
 # Configuration
 # --------------------------------------------------------------------------- #
 ROOT = Path(__file__).resolve().parent.parent
-
-# Dataset -> panel title (used in the comparison figure).
-DATASETS = {
-    "b3lyp_tzvp": "B3LYP / def2-TZVP\n(Gibbs free energies)",
-    "pbe_bhattacharyya": "PBE-D3 / def2-TZVP\n(Bhattacharyya et al., electronic energies)",
-}
+DATASETS = ["bhattacharyya"]
 
 # Diagram window (match step 2).
 PH_MIN, PH_MAX = 0.0, 14.0
@@ -40,13 +32,12 @@ U_MIN, U_MAX = 0.8, 2.2
 # Styling
 X_LABEL, Y_LABEL = "pH", "U (V vs. SHE)"
 FONT_FAMILY = "Times New Roman"
-LABEL_FONTSIZE = 34
-TICKLABEL_FONTSIZE = 30
-LEGEND_FONTSIZE = 20
-TITLE_FONTSIZE = 30
+LABEL_FONTSIZE = 38
+TICKLABEL_FONTSIZE = 38
+LEGEND_FONTSIZE = 24
 X_TICK_STEP, Y_TICK_STEP = 2.0, 0.2
 TICK_LENGTH, TICK_WIDTH, TICK_DIRECTION = 7, 1.5, "in"
-FIGURE_DPI = 600
+FIGURE_WIDTH, FIGURE_HEIGHT, FIGURE_DPI = 12, 12, 600
 
 PALETTE = [
     "#008085", "#00C142", "#0042CA", "#0000FE", "#81007F",
@@ -57,7 +48,7 @@ PALETTE = [
 
 
 def draw_pourbaix(ax, df):
-    """Draw one Pourbaix diagram onto `ax`; return legend handles (largest domain first)."""
+    """Draw the Pourbaix diagram onto `ax`; return legend handles (largest domain first)."""
     species = sorted(df["most_stable"].unique())
     code_to_int = {s: i for i, s in enumerate(species)}
     colors = [PALETTE[i % len(PALETTE)] for i in range(len(species))]
@@ -86,27 +77,11 @@ def draw_pourbaix(ax, df):
 
 def plot_one(name):
     df = pd.read_csv(ROOT / "results" / f"stability_grid_{name}.csv")
-    fig, ax = plt.subplots(figsize=(12, 12), dpi=FIGURE_DPI)
+    fig, ax = plt.subplots(figsize=(FIGURE_WIDTH, FIGURE_HEIGHT), dpi=FIGURE_DPI)
     handles = draw_pourbaix(ax, df)
     ax.legend(handles=handles, loc="center left", bbox_to_anchor=(1.0, 0.5),
               fontsize=LEGEND_FONTSIZE, framealpha=0.0)
     out = ROOT / "results" / f"pourbaix_diagram_{name}.png"
-    fig.savefig(out, dpi=FIGURE_DPI, bbox_inches="tight")
-    plt.close(fig)
-    print(f"Wrote {out.name}")
-
-
-def plot_comparison():
-    names = list(DATASETS)
-    fig, axes = plt.subplots(1, len(names), figsize=(11 * len(names), 11), dpi=FIGURE_DPI)
-    for ax, name in zip(np.atleast_1d(axes), names):
-        df = pd.read_csv(ROOT / "results" / f"stability_grid_{name}.csv")
-        handles = draw_pourbaix(ax, df)
-        ax.set_title(DATASETS[name], fontsize=TITLE_FONTSIZE, fontweight="bold", pad=14)
-        ax.legend(handles=handles, loc="center left", bbox_to_anchor=(1.0, 0.5),
-                  fontsize=LEGEND_FONTSIZE, framealpha=0.0)
-    fig.subplots_adjust(wspace=0.55)
-    out = ROOT / "results" / "pourbaix_diagram_comparison.png"
     fig.savefig(out, dpi=FIGURE_DPI, bbox_inches="tight")
     plt.close(fig)
     print(f"Wrote {out.name}")
@@ -117,7 +92,6 @@ def main():
     plt.rcParams["font.family"] = [FONT_FAMILY, "DejaVu Serif", "serif"]
     for name in DATASETS:
         plot_one(name)
-    plot_comparison()
 
 
 if __name__ == "__main__":

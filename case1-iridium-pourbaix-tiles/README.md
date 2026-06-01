@@ -1,11 +1,15 @@
 # Iridium Pourbaix Tiles
 
-Build a **potential–pH (Pourbaix) diagram** for iridium-oxide cluster catalysts
-directly from first-principles energies, by **brute-force grid sampling**
-("tiles") rather than by analytically solving for the equilibria between species.
+Build a **potential–pH (Pourbaix) diagram** for a catalyst directly from
+first-principles energies, by **brute-force grid sampling** ("tiles") rather than
+by analytically solving for the equilibria between species.
+
+The repository introduces the method and applies it, as a worked case study, to
+the iridium-oxide oxygen-evolution catalyst of Bhattacharyya, Poidevin & Auer
+(*J. Phys. Chem. C* 2021).
 
 <p align="center">
-  <img src="results/pourbaix_diagram_comparison.png" width="860" alt="Pourbaix diagrams: B3LYP/TZVP vs PBE (Bhattacharyya)">
+  <img src="results/pourbaix_diagram_bhattacharyya.png" width="560" alt="Pourbaix diagram of IrOx clusters (Bhattacharyya et al. data)">
 </p>
 
 ## Why this approach (the motivation)
@@ -32,10 +36,9 @@ simply *emerge* as the contours where the lowest-energy species changes. Adding 
 new candidate species, charge state, or protonation level means adding a row to a
 table, not re-deriving the diagram.
 
-## Scientific background and case study
+## Case study: IrOₓ for the oxygen evolution reaction
 
-This workflow reproduces and extends the constant-potential, explicit-pH
-framework of:
+We apply the method to the system of:
 
 > Bhattacharyya, K.; Poidevin, C.; Auer, A. A. *Structure and Reactivity of
 > IrOₓ Nanoparticles for the Oxygen Evolution Reaction in Electrocatalysis: An
@@ -50,7 +53,8 @@ exchanges **electrons** with the electrode (changing its net charge `q`) and
 **protons** with the solvent (changing its hydrogen count `n`). The most stable
 state therefore moves across the `U`–`pH` plane: protonated, hydroxyl-rich species
 dominate at low potential, and deprotonation/oxidation takes over as the potential
-rises toward the ~1.53 V vs. SHE OER onset.
+rises toward the ~1.53 V vs. SHE OER onset. The diagram above reproduces those
+trends directly from the published cluster energies.
 
 ## The free-energy expression
 
@@ -66,7 +70,7 @@ dG_i(U, pH) = (mu_i - mu_ref)
 
 | Symbol    | Meaning                                                                  |
 |-----------|--------------------------------------------------------------------------|
-| `mu`      | species energy (eV) — see the note on **which** energy, below            |
+| `mu`      | species energy (eV)                                                      |
 | `q`       | net charge (electrons exchanged with the electrode)                      |
 | `n`       | number of H atoms (protons exchanged with the solvent)                   |
 | `MU_H`    | effective chemical potential of the exchanged hydrogen, −11.20 eV        |
@@ -76,71 +80,45 @@ dG_i(U, pH) = (mu_i - mu_ref)
 Because only *differences* between species enter, the choice of reference shifts
 every `dG` by a constant and **does not change the diagram**.
 
-## The result is only as good as the energies you feed it
+## Interpreting the diagram
 
-The grid procedure is exact, but the diagram it draws inherits **every**
-approximation in the input energies `mu`. Three choices matter, in increasing
-order of impact:
-
-- **Basis set** — e.g. def2-SVP vs def2-TZVP shifts relative energies.
-- **Exchange–correlation functional** — a GGA (PBE) and a hybrid (B3LYP) order
-  the charge/oxidation states differently.
-- **Which energy is used as `mu`** — this is the big one. Feeding *bare electronic
-  (SCF) energies* gives a different diagram than feeding *thermally-corrected
-  Gibbs free energies* (which add zero-point, thermal and entropic terms). The two
-  are not interchangeable: relative stabilities, and therefore domain boundaries,
-  move. (Bhattacharyya et al. explicitly *neglect* ZPE and entropy, i.e. they use
-  electronic energies as a free-energy proxy.)
-
-The two datasets shipped here make this concrete. The diagrams come from
-different functionals **and** different energy definitions, and they look
-substantially different (see the comparison figure above) even though the grid
-machinery is identical:
-
-| Dataset (`<name>`)      | Level of theory                              | Energy used                         |
-|-------------------------|----------------------------------------------|-------------------------------------|
-| `b3lyp_tzvp`            | B3LYP / def2-TZVP                             | Gibbs free energies (thermally corrected) |
-| `pbe_bhattacharyya`     | PBE-D3 / def2-TZVP (Bhattacharyya et al.)    | electronic energies (ZPE/entropy neglected) |
-
-The takeaway: this tool *constructs* the diagram reliably, but interpreting it
-requires stating clearly which functional, basis set, and energy definition the
-input came from.
+The grid procedure is exact, but the diagram it draws is only as good as the input
+energies `mu`. The result depends on the **basis set**, the **exchange–correlation
+functional**, and — most importantly — on **which energy is used**: bare electronic
+(SCF) energies and thermally-corrected Gibbs free energies (with zero-point and
+entropic terms) generally order the species differently and move the domain
+boundaries. The dataset here is **PBE-D3 / def2-TZVP electronic energies** (ZPE and
+entropy neglected, following the paper); a diagram for this system should always be
+read together with the level of theory and energy definition behind it.
 
 ## Data: pivot vs. long format
 
-The energies live in two layouts, and `step 1` converts the first into the second.
+The energies live in two layouts, and `step 1` converts between them.
 
-- **Pivot** (`data/energies_pivot_<name>.csv`) — the human-friendly layout: one row
-  per cluster, one column per charge state. This is how DFT results typically
-  arrive (used here by `b3lyp_tzvp`).
-- **Long format** (`data/energies_long_format_<name>.csv`) — the machine-friendly
-  layout: one row per **species** = one (cluster, charge state) pair, which is the
-  unit that competes for stability. `step 1` also assigns every species a short
-  **code** (e.g. `2C`) so the later steps never carry long formula strings:
+- **Pivot** (`data/energies_pivot_bhattacharyya.csv`) — the human-friendly layout:
+  one row per cluster, one column per charge state. This is how DFT results
+  typically arrive.
+- **Long format** (`data/energies_long_format_bhattacharyya.csv`) — the
+  machine-friendly layout: one row per **species** = one (cluster, charge state)
+  pair, the unit that competes for stability. `step 1` also assigns every species a
+  short **code** (e.g. `2D`) so the later steps never carry long formula strings:
   number = cluster ranked by H content (1 = most H-rich), letter = charge
   (A = −2, B = −1, C = 0, D = +1, E = +2).
-
-A dataset may also be supplied **directly in long format**, in which case it has no
-pivot file and `step 1` simply skips it. The `pbe_bhattacharyya` set is provided
-this way.
 
 ## Repository layout
 
 ```
 iridium-pourbaix-tiles/
 ├── data/
-│   ├── energies_pivot_b3lyp_tzvp.csv             # raw DFT energies, pivot layout
-│   ├── energies_long_format_b3lyp_tzvp.csv       # long format + codes (from step 1)
-│   ├── energies_long_format_pbe_bhattacharyya.csv # supplied directly in long format
+│   ├── energies_pivot_bhattacharyya.csv          # DFT energies, pivot layout
+│   ├── energies_long_format_bhattacharyya.csv    # long format + codes (from step 1)
 │   └── README.md                                 # data dictionary + provenance
 ├── scripts/
 │   ├── step1_pivot_to_long_format.py             # pivot -> long format + species codes
 │   ├── step2_rank_stability_grid.py              # long format -> winning species per cell
-│   └── step3_plot_pourbaix_diagram.py            # stability grid -> diagrams + comparison
+│   └── step3_plot_pourbaix_diagram.py            # stability grid -> Pourbaix diagram
 ├── results/
-│   ├── pourbaix_diagram_b3lyp_tzvp.png
-│   ├── pourbaix_diagram_pbe_bhattacharyya.png
-│   └── pourbaix_diagram_comparison.png           # (stability_grid_*.csv are regenerated, not committed)
+│   └── pourbaix_diagram_bhattacharyya.png        # (stability_grid_*.csv is regenerated, not committed)
 ├── requirements.txt
 ├── LICENSE
 └── README.md
@@ -151,31 +129,20 @@ iridium-pourbaix-tiles/
 ```bash
 pip install -r requirements.txt
 
-python scripts/step1_pivot_to_long_format.py    # converts pivot datasets -> long format
-python scripts/step2_rank_stability_grid.py     # results/stability_grid_*.csv
-python scripts/step3_plot_pourbaix_diagram.py   # results/pourbaix_diagram_*.png + comparison
+python scripts/step1_pivot_to_long_format.py    # data/energies_long_format_bhattacharyya.csv
+python scripts/step2_rank_stability_grid.py     # results/stability_grid_bhattacharyya.csv
+python scripts/step3_plot_pourbaix_diagram.py   # results/pourbaix_diagram_bhattacharyya.png
 ```
 
-To add a dataset, either drop an `energies_pivot_<name>.csv` in `data/` and list
-`<name>` in step 1's `DATASETS`, or drop a ready-made
-`energies_long_format_<name>.csv` directly. Then list `<name>` in steps 2 and 3.
-Potential/pH window, grid resolution, reference species, colours and styling are
-all exposed as constants at the top of each script.
-
-## A note on the trimmed B3LYP data
-
-This release contains **no outlier-removal step**: the diagram is plotted directly
-from the data. One charge state in the raw B3LYP set — the `q+1` state of
-`Ir_3_O_4_OH_5_H2O_5` (species `1D`) — was a verbatim duplicate of that cluster's
-`q-1` energy, an obvious data-entry error that spuriously dominated the map. It
-has been removed at source (the cell is blank in `energies_pivot_b3lyp_tzvp.csv`),
-so it never enters the analysis and the scripts stay free of correction logic. See
-`data/README.md`.
+Each script has a short configuration block at the top — potential/pH window, grid
+resolution, reference species, colours and styling — so the diagram can be re-tuned
+without touching the logic. To analyse a different system, drop an
+`energies_pivot_<name>.csv` in `data/` and set `<name>` in the scripts.
 
 ## Requirements
 
-Python ≥ 3.9 with `numpy`, `pandas`, `matplotlib` (see `requirements.txt`). Figures
-use Times New Roman where available, falling back to a generic serif otherwise.
+Python ≥ 3.9 with `numpy`, `pandas`, `matplotlib` (see `requirements.txt`). The
+figure uses Times New Roman where available and falls back to a generic serif.
 
 ## License
 

@@ -2,12 +2,12 @@
 """
 Step 1 - Convert the pivot table to long format (and codify the species).
 
-The DFT energies may arrive as a PIVOT table: one row per cluster, one column
-per charge state. That layout is convenient for a human to read but awkward for
-the computer, because the quantity that actually competes for stability is a
-single (cluster, charge state) pair - a "species" - not a whole row.
+DFT energies arrive as a PIVOT table: one row per cluster, one column per charge
+state. That layout reads well for a human but is awkward for the analysis, where
+the quantity that actually competes for stability is a single (cluster, charge
+state) pair - a "species" - not a whole row.
 
-This script reshapes each pivot table into LONG format: one row per species. It
+This script reshapes the pivot table into LONG format: one row per species. It
 also assigns every species a short CODE so the later steps never have to carry
 long formula strings around:
 
@@ -15,11 +15,8 @@ long formula strings around:
       cluster number : cluster ranked by hydrogen content (1 = most H-rich)
       charge letter  : A=-2, B=-1, C=0, D=+1, E=+2
 
-Charge states whose energy is blank/non-finite in the pivot file are skipped, so
-any data point removed at source (see data/README.md) never enters the analysis.
-
-Only datasets supplied as a pivot need this step. A dataset already provided in
-long format (e.g. pbe_bhattacharyya) has no pivot file and is simply skipped.
+Charge states with a blank/non-finite energy in the pivot file are skipped (the
+curated dataset only tabulates the charge states reported in the study).
 
 Input : data/energies_pivot_<dataset>.csv
 Output: data/energies_long_format_<dataset>.csv
@@ -35,10 +32,7 @@ import pandas as pd
 # Configuration
 # --------------------------------------------------------------------------- #
 ROOT = Path(__file__).resolve().parent.parent
-
-# Pivot datasets to convert. Datasets shipped directly in long format are not
-# listed here (they have no pivot file).
-DATASETS = ["b3lyp_tzvp"]
+DATASETS = ["bhattacharyya"]
 
 CHARGE_TO_LETTER = {-2: "A", -1: "B", 0: "C", 1: "D", 2: "E"}
 ENERGY_UNIT_TAG = "eV"  # only the eV energy columns are used
@@ -92,14 +86,14 @@ def pivot_to_long(pivot_csv: Path, long_csv: Path) -> None:
     out.to_csv(long_csv, index=False)
     print(f"[{pivot_csv.name}] -> {long_csv.name}: {len(out)} species")
     if skipped:
-        print(f"    skipped (no energy): {', '.join(skipped)}")
+        print(f"    skipped {len(skipped)} charge state(s) not tabulated in this dataset")
 
 
 def main() -> None:
     for name in DATASETS:
         pivot = ROOT / "data" / f"energies_pivot_{name}.csv"
         if not pivot.exists():
-            print(f"[{name}] no pivot file found; skipping (supplied in long format).")
+            print(f"[{name}] no pivot file found; skipping.")
             continue
         pivot_to_long(pivot, ROOT / "data" / f"energies_long_format_{name}.csv")
 

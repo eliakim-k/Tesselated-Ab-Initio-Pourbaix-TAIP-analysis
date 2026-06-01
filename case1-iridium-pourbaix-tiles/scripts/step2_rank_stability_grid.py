@@ -2,10 +2,11 @@
 """
 Step 2 - Rank species stability on the potential-pH grid.
 
-This is where the "tiles" idea replaces the usual analytical Pourbaix
-construction. Instead of solving, pair by pair, for the equilibrium lines
-between species (the pKa of every protonation step, the equilibrium potential of
-every redox step, and the intersections of all those Nernst lines), we simply:
+This is the heart of the method, and where the "tiles" idea replaces the usual
+analytical Pourbaix construction. Instead of solving, pair by pair, for the
+equilibrium lines between species (the pKa of every protonation step, the
+equilibrium potential of every redox step, and the intersections of all those
+Nernst lines), we simply:
 
     1. lay a fine grid over the potential-pH plane,
     2. evaluate the relative free energy of EVERY species at each grid cell, and
@@ -41,12 +42,7 @@ import pandas as pd
 # Configuration
 # --------------------------------------------------------------------------- #
 ROOT = Path(__file__).resolve().parent.parent
-
-# Datasets and the reference species used for each (does not affect the diagram).
-DATASETS = {
-    "b3lyp_tzvp": {"reference": "5C"},
-    "pbe_bhattacharyya": {"reference": "4C"},
-}
+DATASETS = {"bhattacharyya": {"reference": "4C"}}
 
 # Thermodynamic parameters
 MU_H = -11.20         # effective chemical potential of exchanged hydrogen (eV)
