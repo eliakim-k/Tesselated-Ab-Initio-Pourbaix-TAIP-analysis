@@ -1,4 +1,4 @@
-# Tessellated Ab-Initio Pourbaix (TAIP) Analysis
+# Tessellated Ab Initio Pourbaix (TAIP) Analysis
 
 Construct **surface and cluster Pourbaix (potential–pH) diagrams from
 first-principles energies** by tiling the potential–pH plane into a fine grid and,
