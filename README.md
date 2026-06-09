@@ -99,8 +99,8 @@ If you use the TAIP method or this code, **please cite the method paper**:
 
 > Kambale, E. M.; Rivera Rocabado, D. S.; Kanematsu, Y.; Ishimoto, T.
 > *Field-Dependent Redox Thermodynamics of MoOₘHₙ Species on Cu(111) and Ni(111)
-> Surfaces under Alkaline Hydrogen Evolution Conditions.* **Preprints.org** 2026.
-> [doi:10.20944/preprints202604.0944.v1](https://doi.org/10.20944/preprints202604.0944.v1)
+> Surfaces under Alkaline Hydrogen Evolution Conditions.* Surfaces 2026, 9(2), 51;
+> [https://doi.org/10.3390/surfaces9020051](https://doi.org/10.3390/surfaces9020051)
 
 The Case 1 cluster geometries are from:
 
